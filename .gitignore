@@ -22,14 +22,12 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 .nyc_output
-
-# nyc temp directory (https://github.com/istanbuljs/nyc/blob/master/CHANGELOG.md#v1000-2016-07-06)
 .nyc_tmp
 
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-grunt-files)
+# Grunt intermediate storage
 .grunt
 
-# Bower dependency directory (https://bower.io/)
+# Bower dependency directory
 bower_components
 
 # node-waf stuff
@@ -93,27 +91,9 @@ jspm_packages/
 .next/
 out/
 
-# Prisma
-/backend/prisma/migrations/
-/backend/prisma/dev.db
-
-# Uploads
-/backend/uploads/
-
-# Jest
-/backend/jest.setup.ts
-/backend/backend/eslint.config.js
-/backend/backend/jest.setup.ts
-/backend/backend/prisma/migrations/
-/backend/backend/src/middlewares/validation.ts
-/backend/docs/.DS_Store
-/backend/docs/er-diagram.mermaid
-/backend/docs/er-diagram.png
-/backend/docs/er-diagram.svg
-/backend/docs/frontend-api-calls.mermaid
-/backend/docs/frontend-api-calls.png
-/backend/docs/frontend-api-calls.svg
-/backend/docs/system-diagram.mermaid
-/backend/docs/system-diagram.png
-/backend/docs/system-diagram.svg
-/backend/frontend/src/types.ts
+# General ignores for build artifacts or temporary files that might appear anywhere
+dist/
+build/
+tmp/
+temp/
+.cache/
