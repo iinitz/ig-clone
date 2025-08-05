@@ -37,6 +37,9 @@ model Comment {
   authorId  Int
   content   String
   createdAt DateTime @default(now())
+  parentId  Int?     @map("parent_id")
+  parent    Comment? @relation("ReplyComments", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("ReplyComments")
 }
 
 model Like {

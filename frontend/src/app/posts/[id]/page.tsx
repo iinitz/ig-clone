@@ -3,12 +3,14 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Heart } from 'lucide-react';
+import { Heart, MessageCircle } from 'lucide-react';
 
 interface Comment {
   id: number;
   content: string;
   author: { username: string };
+  parentId?: number;
+  replies?: Comment[];
 }
 
 interface Like {
@@ -25,6 +27,56 @@ interface Post {
   likes: Like[];
 }
 
+const CommentItem = ({ comment, postId, user, onCommentAdded }: { comment: Comment; postId: string | string[]; user: any; onCommentAdded: () => void }) => {
+  const [replyContent, setReplyContent] = useState('');
+  const [showReplyInput, setShowReplyInput] = useState(false);
+
+  const handleReplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`http://localhost:3001/api/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({ content: replyContent, parentId: comment.id }),
+      });
+      if (res.ok) {
+        setReplyContent('');
+        setShowReplyInput(false);
+        onCommentAdded(); // Trigger re-fetch of comments
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="mb-2 ml-4 border-l pl-2">
+      <span className="font-bold">{comment.author.username}</span> {comment.content}
+      <button onClick={() => setShowReplyInput(!showReplyInput)} className="ml-2 text-blue-500 text-sm">
+        {showReplyInput ? 'Cancel' : 'Reply'}
+      </button>
+      {showReplyInput && (
+        <form onSubmit={handleReplySubmit} className="mt-2 flex">
+          <input
+            type="text"
+            placeholder={`Reply to ${comment.author.username}...`}
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
+            className="w-full p-1 border rounded-l-md text-sm"
+          />
+          <button type="submit" className="bg-blue-500 text-white p-1 rounded-r-md text-sm">Post</button>
+        </form>
+      )}
+      {comment.replies && comment.replies.map((reply) => (
+        <CommentItem key={reply.id} comment={reply} postId={postId} user={user} onCommentAdded={onCommentAdded} />
+      ))}
+    </div>
+  );
+};
+
 export default function PostPage() {
   const { user } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
@@ -34,6 +86,21 @@ export default function PostPage() {
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
 
+  const fetchPost = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/posts/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setPost(data);
+        if (user) {
+          setIsLiked(data.likes.some((like: Like) => like.userId === user.userId));
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       router.push('/login');
@@ -41,21 +108,6 @@ export default function PostPage() {
   }, [user, router]);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/api/posts/${id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setPost(data);
-          if (user) {
-            setIsLiked(data.likes.some((like: Like) => like.userId === user.userId));
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     if (id && user) {
       fetchPost();
     }
@@ -73,9 +125,8 @@ export default function PostPage() {
         body: JSON.stringify({ content: comment }),
       });
       if (res.ok) {
-        const newComment = await res.json();
-        setPost((prevPost) => prevPost ? { ...prevPost, comments: [...prevPost.comments, newComment] } : null);
         setComment('');
+        fetchPost(); // Re-fetch comments to include the new one
       }
     } catch (error) {
       console.error(error);
@@ -119,10 +170,8 @@ export default function PostPage() {
           </div>
           <div className="flex-grow overflow-y-auto">
             <p className="mb-4"><span className="font-bold">{post.author.username}</span> {post.caption}</p>
-            {post.comments.map((comment) => (
-              <div key={comment.id} className="mb-2">
-                <span className="font-bold">{comment.author.username}</span> {comment.content}
-              </div>
+            {post.comments.filter(c => !c.parentId).map((comment) => (
+              <CommentItem key={comment.id} comment={comment} postId={id} user={user} onCommentAdded={fetchPost} />
             ))}
           </div>
           <div className="border-t pt-4">

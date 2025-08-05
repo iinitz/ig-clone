@@ -37,6 +37,9 @@ const router = express.Router({ mergeParams: true });
  *             properties:
  *               content:
  *                 type: string
+ *               parentId:
+ *                 type: integer
+ *                 description: ID of the parent comment (optional, for replies)
  *     responses:
  *       201:
  *         description: Comment added successfully

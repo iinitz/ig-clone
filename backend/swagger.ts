@@ -1,6 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
+import app from './src/app'; // Import the app directly from src/app.ts
 
 const options = {
   definition: {
