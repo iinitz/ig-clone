@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext'
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-
+import Image from 'next/image' 
 import { Heart } from 'lucide-react'
 import { Comment, Like, Post } from '@/types'
 
