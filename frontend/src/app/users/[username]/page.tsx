@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image'; // Import Image component
 import { useAuth } from '@/contexts/AuthContext';
 
 interface UserProfile {
@@ -16,14 +17,14 @@ export default function UserProfilePage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const params = useParams();
   const { username } = params;
-  const { user } = useAuth();
+  const { user, isAuthReady } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (isAuthReady && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isAuthReady, router]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -45,6 +46,7 @@ export default function UserProfilePage() {
     }
   }, [username, user]);
 
+  if (!isAuthReady) return null; // Render nothing until auth state is determined
   if (!user || !userProfile) return null; // Render nothing if not authenticated or profile not loaded, redirect will handle it
 
   return (
@@ -63,7 +65,13 @@ export default function UserProfilePage() {
       <div className="grid grid-cols-3 gap-1">
         {userProfile.posts.map((post) => (
           <Link key={post.id} href={`/posts/${post.id}`}>
-            <img src={`http://localhost:3001/${post.imageUrl}`} alt={post.caption} className="w-full h-48 object-cover" />
+            <Image 
+              src={`http://localhost:3001/${post.imageUrl}`} 
+              alt={post.caption} 
+              width={300} // Adjust based on your design needs
+              height={300} // Adjust based on your design needs
+              className="w-full h-48 object-cover" 
+            />
           </Link>
         ))}
       </div>

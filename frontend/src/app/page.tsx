@@ -3,6 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Import Image component
 import { Heart, MessageCircle } from 'lucide-react';
 
 interface Post {
@@ -75,7 +76,13 @@ export default function HomePage() {
                   <p className="font-bold">{post.author.username}</p>
                 </div>
                 <Link href={`/posts/${post.id}`}>
-                  <img src={`http://localhost:3001/${post.imageUrl}`} alt={post.caption} className="w-full" />
+                  <Image 
+                    src={`http://localhost:3001/${post.imageUrl}`} 
+                    alt={post.caption} 
+                    width={500} // Adjust based on your design needs
+                    height={500} // Adjust based on your design needs
+                    className="w-full" 
+                  />
                 </Link>
                 <div className="p-4">
                   <div className="flex items-center space-x-4 mb-2">

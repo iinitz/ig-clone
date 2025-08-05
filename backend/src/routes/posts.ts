@@ -1,4 +1,5 @@
 import express from 'express';
+import { body, validationResult } from 'express-validator';
 import * as postController from '../controllers/postController';
 import authMiddleware from '../middlewares/authMiddleware';
 import multer from 'multer';
@@ -72,7 +73,20 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, upload.single('image'), postController.createPost);
+router.post(
+  '/',
+  authMiddleware,
+  upload.single('image'),
+  [body('caption').optional().isString().withMessage('Caption must be a string')],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+  postController.createPost
+);
 router.get('/', postController.getAllPosts);
 router.get('/:id', postController.getPostById);
 

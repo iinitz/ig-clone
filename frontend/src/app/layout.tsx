@@ -19,20 +19,17 @@ export const metadata: Metadata = {
 
 import Header from '@/components/Header';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-background text-foreground">
-        <ThemeProvider>
           <AuthProvider>
             <Header />
             <main className="container mx-auto p-4">
               {children}
             </main>
           </AuthProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

@@ -22,6 +22,7 @@ erDiagram
         INT user_id FK
         TEXT content
         TIMESTAMP created_at
+        INT parent_id FK
     }
 
     likes {
@@ -36,4 +37,5 @@ erDiagram
     posts ||--o{ likes : "has"
     users ||--o{ comments : "has"
     users ||--o{ likes : "has"
+    comments ||--o{ comments : "replies to" 
 ```

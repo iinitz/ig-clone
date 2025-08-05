@@ -1,4 +1,5 @@
 import express from 'express';
+import { body, validationResult } from 'express-validator';
 import * as commentController from '../controllers/commentController';
 import authMiddleware from '../middlewares/authMiddleware';
 
@@ -37,6 +38,9 @@ const router = express.Router({ mergeParams: true });
  *             properties:
  *               content:
  *                 type: string
+ *               parentId:
+ *                 type: integer
+ *                 description: ID of the parent comment (optional, for replies)
  *     responses:
  *       201:
  *         description: Comment added successfully
@@ -60,7 +64,22 @@ const router = express.Router({ mergeParams: true });
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, commentController.createComment);
+router.post(
+  '/',
+  authMiddleware,
+  [
+    body('content').notEmpty().withMessage('Comment content is required'),
+    body('parentId').optional().isInt().withMessage('Parent ID must be an integer'),
+  ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+  commentController.createComment
+);
 router.get('/', commentController.getCommentsByPost);
 
 export default router;
