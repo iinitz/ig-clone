@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { buildCommentTree } from './commentController'; // Import buildCommentTree
 
 const prisma = new PrismaClient();
 
@@ -30,13 +31,31 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
 export const getPostById = async (req: Request, res: Response) => {
   try {
-    const post = await prisma.post.findUnique({ 
+    const post = await prisma.post.findUnique({
       where: { id: parseInt(req.params.id) },
-      include: { comments: { include: { author: true } }, likes: true, author: true },
+      include: { likes: true, author: true }, // Remove comments include here
     });
+
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
+
+    // Fetch all comments for this post and build the tree
+    const comments = await prisma.comment.findMany({
+      where: { postId: parseInt(req.params.id) },
+      include: {
+        author: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    const nestedComments = buildCommentTree(comments);
+
+    // Assign the nested comments to the post object
+    (post as any).comments = nestedComments;
+
     res.status(200).json(post);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

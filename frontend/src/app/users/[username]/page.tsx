@@ -16,14 +16,14 @@ export default function UserProfilePage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const params = useParams();
   const { username } = params;
-  const { user } = useAuth();
+  const { user, isAuthReady } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (isAuthReady && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isAuthReady, router]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -45,6 +45,7 @@ export default function UserProfilePage() {
     }
   }, [username, user]);
 
+  if (!isAuthReady) return null; // Render nothing until auth state is determined
   if (!user || !userProfile) return null; // Render nothing if not authenticated or profile not loaded, redirect will handle it
 
   return (

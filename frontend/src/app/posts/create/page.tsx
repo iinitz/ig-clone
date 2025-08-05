@@ -8,14 +8,14 @@ export default function CreatePostPage() {
   const [caption, setCaption] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user, isAuthReady } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (isAuthReady && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isAuthReady, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -63,6 +63,7 @@ export default function CreatePostPage() {
     }
   };
 
+  if (!isAuthReady) return null; // Render nothing until auth state is determined
   if (!user) return null; // Render nothing if not authenticated, redirect will handle it
 
   return (

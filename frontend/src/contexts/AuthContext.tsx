@@ -7,12 +7,14 @@ interface AuthContextType {
   user: { token: string; username: string; userId: number } | null;
   login: (token: string, username: string, userId: number) => void;
   logout: () => void;
+  isAuthReady: boolean; // New property
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<{ token: string; username: string; userId: number } | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false); // New state
   const router = useRouter();
 
   useEffect(() => {
@@ -22,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token && username && userId) {
       setUser({ token, username, userId: parseInt(userId) });
     }
+    setIsAuthReady(true); // Set to true after checking localStorage
   }, []);
 
   const login = (token: string, username: string, userId: number) => {
@@ -40,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthReady }}>
       {children}
     </AuthContext.Provider>
   );

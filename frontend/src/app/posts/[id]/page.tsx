@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Heart, MessageCircle } from 'lucide-react';
 
+console.log("PostPage component rendering"); // Added for debugging
+
 interface Comment {
   id: number;
   content: string;
@@ -78,7 +80,7 @@ const CommentItem = ({ comment, postId, user, onCommentAdded }: { comment: Comme
 };
 
 export default function PostPage() {
-  const { user } = useAuth();
+  const { user, isAuthReady } = useAuth();
   const [post, setPost] = useState<Post | null>(null);
   const [comment, setComment] = useState('');
   const params = useParams();
@@ -102,10 +104,10 @@ export default function PostPage() {
   };
 
   useEffect(() => {
-    if (!user) {
+    if (isAuthReady && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, isAuthReady, router]);
 
   useEffect(() => {
     if (id && user) {
@@ -156,6 +158,7 @@ export default function PostPage() {
     }
   };
 
+  if (!isAuthReady) return null; // Render nothing until auth state is determined
   if (!user || !post) return null; // Render nothing if not authenticated or post not loaded, redirect will handle it
 
   return (
