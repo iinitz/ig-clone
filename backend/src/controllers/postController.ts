@@ -1,0 +1,44 @@
+import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export const createPost = async (req: Request, res: Response) => {
+  try {
+    const { caption } = req.body;
+    const imageUrl = req.file?.path;
+    if (!imageUrl) {
+      return res.status(400).json({ message: 'Image is required' });
+    }
+    const newPost = await prisma.post.create({
+      data: { caption, imageUrl, authorId: (req as any).user.userId },
+    });
+    res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getAllPosts = async (req: Request, res: Response) => {
+  try {
+    const posts = await prisma.post.findMany({ include: { author: true, likes: true, comments: true } });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const getPostById = async (req: Request, res: Response) => {
+  try {
+    const post = await prisma.post.findUnique({ 
+      where: { id: parseInt(req.params.id) },
+      include: { comments: { include: { author: true } }, likes: true, author: true },
+    });
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

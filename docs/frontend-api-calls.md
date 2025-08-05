@@ -1,0 +1,18 @@
+```mermaid
+graph TD
+    subgraph Frontend Pages
+        A[Login Page] -->|POST /api/auth/login| B(Backend API);
+        C[Register Page] -->|POST /api/auth/register| B;
+        D[Home Page] -->|GET /api/posts| B;
+        D -->|POST /api/posts/POST_ID/likes| B;
+        E[Create Post Page] -->|POST /api/posts| B;
+        F[Single Post Page] -->|GET /api/posts/ID| B;
+        F -->|POST /api/posts/POST_ID/comments| B;
+        F -->|POST /api/posts/POST_ID/likes| B;
+        G[User Profile Page] -->|GET /api/users/USERNAME| B;
+    end
+
+    subgraph Backend API
+        B
+    end
+```
