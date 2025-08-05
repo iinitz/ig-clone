@@ -1,36 +1,36 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import AuthFormLayout from '@/components/ui/AuthFormLayout';
-import Link from 'next/link';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
+import AuthFormLayout from '@/components/ui/AuthFormLayout'
+import Link from 'next/link'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const router = useRouter();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { login } = useAuth()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const res = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-      });
+      })
       if (res.ok) {
-        const { token, username, userId } = await res.json();
-        login(token, username, userId);
-        router.push('/');
+        const { token, username, userId } = await res.json()
+        login(token, username, userId)
+        router.push('/')
       } else {
-        console.error('Login failed');
+        console.error('Login failed')
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
     <AuthFormLayout title="Login">
@@ -61,9 +61,9 @@ export default function LoginPage() {
           Login
         </button>
         <p className="text-center text-gray-500 text-xs mt-4">
-          Don't have an account? <Link href="/register" className="text-blue-500 hover:underline">Register</Link>
+          Don&apos;t have an account? <Link href="/register" className="text-blue-500 hover:underline">Register</Link>
         </p>
       </form>
     </AuthFormLayout>
-  );
+  )
 }

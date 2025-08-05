@@ -1,6 +1,6 @@
-import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
-import { Express } from 'express';
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+import { Express } from 'express'
 
 const options = {
   definition: {
@@ -17,10 +17,10 @@ const options = {
     ]
   },
   apis: ['./src/routes/*.ts']
-};
+}
 
-const specs = swaggerJsdoc(options);
+const specs = swaggerJsdoc(options)
 
 export default (app: Express) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-};
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
+}

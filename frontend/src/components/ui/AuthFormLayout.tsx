@@ -1,6 +1,4 @@
-'use client';
-
-import React from 'react';
+'use client'
 
 interface AuthFormLayoutProps {
   title: string;
@@ -15,5 +13,5 @@ export default function AuthFormLayout({ title, children }: AuthFormLayoutProps)
         {children}
       </div>
     </div>
-  );
+  )
 }

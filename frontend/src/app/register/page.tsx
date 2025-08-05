@@ -1,33 +1,33 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import AuthFormLayout from '@/components/ui/AuthFormLayout';
-import Link from 'next/link';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import AuthFormLayout from '@/components/ui/AuthFormLayout'
+import Link from 'next/link'
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const res = await fetch('http://localhost:3001/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
-      });
+      })
       if (res.ok) {
-        router.push('/login');
+        router.push('/login')
       } else {
-        console.error('Registration failed');
+        console.error('Registration failed')
       }
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
     <AuthFormLayout title="Register">
@@ -73,5 +73,5 @@ export default function RegisterPage() {
         </p>
       </form>
     </AuthFormLayout>
-  );
+  )
 }

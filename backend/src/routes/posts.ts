@@ -1,11 +1,11 @@
-import express from 'express';
-import { body, validationResult } from 'express-validator';
-import * as postController from '../controllers/postController';
-import authMiddleware from '../middlewares/authMiddleware';
-import multer from 'multer';
+import express, { Request, Response, NextFunction } from 'express'
+import * as postController from '../controllers/postController'
+import authMiddleware from '../middlewares/authMiddleware'
+import multer from 'multer'
+import { validate, createPostSchema } from '../middlewares/validation'
 
-const upload = multer({ dest: 'uploads/' });
-const router = express.Router();
+const upload = multer({ dest: 'uploads/' })
+const router = express.Router()
 
 /**
  * @swagger
@@ -77,17 +77,10 @@ router.post(
   '/',
   authMiddleware,
   upload.single('image'),
-  [body('caption').optional().isString().withMessage('Caption must be a string')],
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
+  validate(createPostSchema),
   postController.createPost
-);
-router.get('/', postController.getAllPosts);
-router.get('/:id', postController.getPostById);
+)
+router.get('/', postController.getAllPosts)
+router.get('/:id', postController.getPostById)
 
-export default router;
+export default router

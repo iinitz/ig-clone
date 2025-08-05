@@ -1,53 +1,54 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image'; // Import Image component
-import { useAuth } from '@/contexts/AuthContext';
+import { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image' // Import Image component
+import { useAuth } from '@/contexts/AuthContext'
+import { Like, Comment } from '@/types'
 
 interface UserProfile {
   id: number;
   username: string;
   email: string;
-  posts: Array<{ id: number; imageUrl: string; caption: string }>;
+  posts: Array<{ id: number; imageUrl: string; caption: string; createdAt: string; likes: Like[]; comments: Comment[]; }>;
 }
 
 export default function UserProfilePage() {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const params = useParams();
-  const { username } = params;
-  const { user, isAuthReady } = useAuth();
-  const router = useRouter();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const params = useParams()
+  const { username } = params
+  const { user, isAuthReady } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
     if (isAuthReady && !user) {
-      router.push('/login');
+      router.push('/login')
     }
-  }, [user, isAuthReady, router]);
+  }, [user, isAuthReady, router])
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/users/${username}`);
+        const res = await fetch(`http://localhost:3001/api/users/${username}`)
         if (res.ok) {
-          const data = await res.json();
-          setUserProfile(data);
+          const data = await res.json()
+          setUserProfile(data)
         } else {
-          console.error('Failed to fetch user profile');
+          console.error('Failed to fetch user profile')
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    };
+    }
 
     if (username && user) {
-      fetchUserProfile();
+      fetchUserProfile()
     }
-  }, [username, user]);
+  }, [username, user])
 
-  if (!isAuthReady) return null; // Render nothing until auth state is determined
-  if (!user || !userProfile) return null; // Render nothing if not authenticated or profile not loaded, redirect will handle it
+  if (!isAuthReady) return null // Render nothing until auth state is determined
+  if (!user || !userProfile) return null // Render nothing if not authenticated or profile not loaded, redirect will handle it
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -76,5 +77,5 @@ export default function UserProfilePage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

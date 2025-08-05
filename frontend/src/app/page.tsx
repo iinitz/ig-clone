@@ -1,42 +1,43 @@
-'use client';
+'use client'
 
-import { useAuth } from '@/contexts/AuthContext';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image'; // Import Image component
-import { Heart, MessageCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Heart } from 'lucide-react'
+
 
 interface Post {
   id: number;
   imageUrl: string;
   caption: string;
-  author: { username: string };
+  author: { username: string; avatarUrl?: string };
   createdAt: string;
   likes: Array<{ userId: number }>;
-  comments: any[];
+  comments: { id: number; content: string; author: { username: string; avatarUrl?: string } }[];
 }
 
 export default function HomePage() {
-  const { user } = useAuth();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const { user } = useAuth()
+  const [posts, setPosts] = useState<Post[]>([])
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/posts');
+        const res = await fetch('http://localhost:3001/api/posts')
         if (res.ok) {
-          const data = await res.json();
-          setPosts(data);
+          const data = await res.json()
+          setPosts(data)
         }
       } catch (error) {
-        console.error(error);
+        console.error('Failed to fetch posts:', (error as Error).message)
       }
-    };
+    }
 
     if (user) {
-      fetchPosts();
+      fetchPosts()
     }
-  }, [user]);
+  }, [user])
 
   const handleLike = async (postId: number, isCurrentlyLiked: boolean) => {
     try {
@@ -45,34 +46,37 @@ export default function HomePage() {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
-      });
+      })
       if (res.ok) {
         setPosts((prevPosts) =>
           prevPosts.map((post) => {
             if (post.id === postId) {
               const updatedLikes = isCurrentlyLiked
                 ? post.likes.filter((like) => like.userId !== user?.userId)
-                : [...post.likes, { userId: user?.userId || 0 }];
-              return { ...post, likes: updatedLikes };
+                : [...post.likes, { userId: user?.userId || 0 }]
+              return { ...post, likes: updatedLikes }
             }
-            return post;
+            return post
           })
-        );
+        )
       }
     } catch (error) {
-      console.error(error);
+      console.error('Failed to like post:', (error as Error).message)
     }
-  };
+  }
 
   return (
     <div className="max-w-lg mx-auto">
       {user ? (
         <div className="space-y-4">
           {posts.map((post) => {
-            const isLiked = post.likes.some((like) => like.userId === user.userId);
+            const isLiked = post.likes.some((like) => like.userId === user.userId)
             return (
               <div key={post.id} className="bg-white border rounded-lg">
                 <div className="p-4 flex items-center">
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mr-2 text-lg font-bold text-white">
+                    {post.author.username.charAt(0).toUpperCase()}
+                  </div>
                   <p className="font-bold">{post.author.username}</p>
                 </div>
                 <Link href={`/posts/${post.id}`}>
@@ -108,7 +112,7 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       ) : (
@@ -120,5 +124,5 @@ export default function HomePage() {
         </div>
       )}
     </div>
-  );
+  )
 }

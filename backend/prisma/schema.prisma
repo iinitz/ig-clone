@@ -12,6 +12,7 @@ model User {
   username  String   @unique
   password  String
   email     String   @unique
+  avatarUrl String?  @default("https://via.placeholder.com/150")
   createdAt DateTime @default(now())
   posts     Post[]
   comments  Comment[]

@@ -1,8 +1,8 @@
-import express from 'express';
-import * as likeController from '../controllers/likeController';
-import authMiddleware from '../middlewares/authMiddleware';
+import express from 'express'
+import * as likeController from '../controllers/likeController'
+import authMiddleware from '../middlewares/authMiddleware'
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router({ mergeParams: true })
 
 /**
  * @swagger
@@ -38,6 +38,6 @@ const router = express.Router({ mergeParams: true });
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, likeController.toggleLike);
+router.post('/', authMiddleware, likeController.toggleLike)
 
-export default router;
+export default router

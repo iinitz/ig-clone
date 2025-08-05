@@ -1,9 +1,9 @@
-import express from 'express';
-import { body, validationResult } from 'express-validator';
-import * as commentController from '../controllers/commentController';
-import authMiddleware from '../middlewares/authMiddleware';
+import express, { Request, Response, NextFunction } from 'express'
+import * as commentController from '../controllers/commentController'
+import authMiddleware from '../middlewares/authMiddleware'
+import { validate, createCommentSchema } from '../middlewares/validation'
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router({ mergeParams: true })
 
 /**
  * @swagger
@@ -38,9 +38,6 @@ const router = express.Router({ mergeParams: true });
  *             properties:
  *               content:
  *                 type: string
- *               parentId:
- *                 type: integer
- *                 description: ID of the parent comment (optional, for replies)
  *     responses:
  *       201:
  *         description: Comment added successfully
@@ -67,19 +64,9 @@ const router = express.Router({ mergeParams: true });
 router.post(
   '/',
   authMiddleware,
-  [
-    body('content').notEmpty().withMessage('Comment content is required'),
-    body('parentId').optional().isInt().withMessage('Parent ID must be an integer'),
-  ],
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
+  validate(createCommentSchema),
   commentController.createComment
-);
-router.get('/', commentController.getCommentsByPost);
+)
+router.get('/', commentController.getCommentsByPost)
 
-export default router;
+export default router

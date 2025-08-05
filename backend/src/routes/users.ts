@@ -1,7 +1,7 @@
-import express from 'express';
-import * as userController from '../controllers/userController';
+import express from 'express'
+import * as userController from '../controllers/userController'
 
-const router = express.Router();
+const router = express.Router()
 
 /**
  * @swagger
@@ -31,6 +31,6 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get('/:username', userController.getUserProfile);
+router.get('/:username', userController.getUserProfile)
 
-export default router;
+export default router

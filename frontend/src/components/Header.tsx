@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
-import { Home, PlusSquare, User } from 'lucide-react';
+import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { Home, PlusSquare, User } from 'lucide-react'
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuth()
 
   return (
     <header className="bg-white border-b sticky top-0 z-10">
@@ -48,5 +48,5 @@ export default function Header() {
         </nav>
       </div>
     </header>
-  );
+  )
 }

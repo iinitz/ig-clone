@@ -1,23 +1,30 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
+    const { username } = req.params
     const user = await prisma.user.findUnique({
       where: { username },
-      include: { posts: { orderBy: { createdAt: 'desc' } } },
-    });
+      select: { 
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+        avatarUrl: true,
+        posts: { select: { id: true, imageUrl: true, caption: true, createdAt: true, likes: true, comments: true }, orderBy: { createdAt: 'desc' } },
+      },
+    })
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' })
     }
 
-    res.status(200).json(user);
+    res.status(200).json(user)
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error(error)
+    res.status(500).json({ message: 'Server error' })
   }
-};
+}

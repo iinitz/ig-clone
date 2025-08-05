@@ -1,43 +1,44 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
+import Image from 'next/image'
 
 export default function CreatePostPage() {
-  const [caption, setCaption] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { user } = useAuth();
-  const router = useRouter();
+  const [caption, setCaption] = useState('')
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const { user } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push('/login')
     }
-  }, [user, router]);
+  }, [user, router])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+      const file = e.target.files[0]
+      setImage(file)
+      setImagePreview(URL.createObjectURL(file))
     } else {
-      setImage(null);
-      setImagePreview(null);
+      setImage(null)
+      setImagePreview(null)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!image) {
-      alert('Please select an image.');
-      return;
+      alert('Please select an image.')
+      return
     }
 
-    const formData = new FormData();
-    formData.append('caption', caption);
-    formData.append('image', image);
+    const formData = new FormData()
+    formData.append('caption', caption)
+    formData.append('image', image)
 
     try {
       const res = await fetch('http://localhost:3001/api/posts', {
@@ -46,24 +47,24 @@ export default function CreatePostPage() {
           Authorization: `Bearer ${user?.token}`,
         },
         body: formData,
-      });
+      })
 
       if (res.ok) {
-        setCaption('');
-        setImage(null);
-        setImagePreview(null);
-        router.push('/');
+        setCaption('')
+        setImage(null)
+        setImagePreview(null)
+        router.push('/')
       } else {
-        console.error('Failed to create post');
-        alert('Failed to create post. Please try again.');
+        console.error('Failed to create post')
+        alert('Failed to create post. Please try again.')
       }
     } catch (error) {
-      console.error(error);
-      alert('An error occurred. Please try again.');
+      console.error('Error creating post:', (error as Error).message)
+      alert('An error occurred. Please try again.')
     }
-  };
+  }
 
-  if (!user) return null; // Render nothing if not authenticated, redirect will handle it
+  if (!user) return null // Render nothing if not authenticated, redirect will handle it
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
@@ -86,7 +87,7 @@ export default function CreatePostPage() {
           />
           {imagePreview && (
             <div className="mt-4">
-              <img src={imagePreview} alt="Image Preview" className="w-full h-48 object-cover rounded-md" />
+              <Image src={imagePreview} alt="Image Preview" width={500} height={300} className="w-full h-48 object-cover rounded-md" />
             </div>
           )}
         </div>
@@ -111,5 +112,5 @@ export default function CreatePostPage() {
         </button>
       </form>
     </div>
-  );
+  )
 }
