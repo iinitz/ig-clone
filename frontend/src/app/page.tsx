@@ -4,8 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Heart } from 'lucide-react'
-
+import { Heart, MessageCircle } from 'lucide-react'
 
 interface Post {
   id: number;
