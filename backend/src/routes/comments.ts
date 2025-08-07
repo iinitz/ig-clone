@@ -43,6 +43,26 @@ const router = express.Router({ mergeParams: true });
  *     responses:
  *       201:
  *         description: Comment added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 content:
+ *                   type: string
+ *                   example: This is a great post!
+ *                 authorId:
+ *                   type: integer
+ *                   example: 1
+ *                 postId:
+ *                   type: integer
+ *                   example: 1
+ *                 parentId:
+ *                   type: integer
+ *                   example: null
  *       401:
  *         description: Unauthorized
  *       500:
@@ -60,6 +80,48 @@ const router = express.Router({ mergeParams: true });
  *     responses:
  *       200:
  *         description: List of comments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   content:
+ *                     type: string
+ *                     example: This is a comment.
+ *                   author:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       username:
+ *                         type: string
+ *                         example: testuser
+ *                   replies:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 2
+ *                         content:
+ *                           type: string
+ *                           example: This is a reply.
+ *                         author:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: integer
+ *                               example: 2
+ *                             username:
+ *                               type: string
+ *                               example: anotheruser
  *       500:
  *         description: Server error
  */

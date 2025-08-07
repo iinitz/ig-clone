@@ -36,6 +36,20 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 username:
+ *                   type: string
+ *                   example: newuser
+ *                 email:
+ *                   type: string
+ *                   example: newuser@example.com
  *       400:
  *         description: User already exists or invalid input
  *       500:
@@ -73,10 +87,13 @@ router.post('/register', authController.register);
  *               properties:
  *                 token:
  *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoidGVzdHVzZXIiLCJpYXQiOjE2MjU2MzYwNjYsImV4cCI6MTYyNTcyMjQ2Nn0.7f8c2f5b8d7f8c2f5b8d7f8c2f5b8d7f8c2f5b8d7f8c2f5b8d7f8c2f5b8d7f8c
  *                 username:
  *                   type: string
+ *                   example: testuser
  *                 userId:
  *                   type: number
+ *                   example: 1
  *       400:
  *         description: Invalid credentials
  *       500:

@@ -26,6 +26,31 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: User profile data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 username:
+ *                   type: string
+ *                   example: testuser
+ *                 posts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       imageUrl:
+ *                         type: string
+ *                         example: /uploads/12345.jpg
+ *                       caption:
+ *                         type: string
+ *                         example: My first post!
  *       404:
  *         description: User not found
  *       500:

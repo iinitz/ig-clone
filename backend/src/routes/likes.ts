@@ -29,8 +29,30 @@ const router = express.Router({ mergeParams: true });
  *     responses:
  *       200:
  *         description: Post unliked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Post unliked successfully
  *       201:
  *         description: Post liked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 postId:
+ *                   type: integer
+ *                   example: 1
+ *                 userId:
+ *                   type: integer
+ *                   example: 1
  *       400:
  *         description: Bad request
  *       401:

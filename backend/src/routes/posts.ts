@@ -38,6 +38,23 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Post created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 imageUrl:
+ *                   type: string
+ *                   example: /uploads/12345.jpg
+ *                 caption:
+ *                   type: string
+ *                   example: My first post!
+ *                 authorId:
+ *                   type: integer
+ *                   example: 1
  *       400:
  *         description: Image is required or invalid input
  *       401:
@@ -50,6 +67,62 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: List of posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   imageUrl:
+ *                     type: string
+ *                     example: /uploads/12345.jpg
+ *                   caption:
+ *                     type: string
+ *                     example: My first post!
+ *                   author:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       username:
+ *                         type: string
+ *                         example: testuser
+ *                   likes:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         userId:
+ *                           type: integer
+ *                           example: 1
+ *                   comments:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         content:
+ *                           type: string
+ *                           example: This is a comment.
+ *                         author:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: integer
+ *                               example: 1
+ *                             username:
+ *                               type: string
+ *                               example: testuser
  *       500:
  *         description: Server error
  *
@@ -67,6 +140,60 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Post data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 imageUrl:
+ *                   type: string
+ *                   example: /uploads/12345.jpg
+ *                 caption:
+ *                   type: string
+ *                   example: My first post!
+ *                 author:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     username:
+ *                       type: string
+ *                       example: testuser
+ *                 likes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       userId:
+ *                         type: integer
+ *                         example: 1
+ *                 comments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       content:
+ *                         type: string
+ *                         example: This is a comment.
+ *                       author:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 1
+ *                           username:
+ *                             type: string
+ *                             example: testuser
  *       404:
  *         description: Post not found
  *       500:
