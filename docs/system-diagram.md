@@ -5,4 +5,5 @@ graph TD
     C -->|Prisma Client| D(PostgreSQL Database);
     C -->|Serves Static Files| A;
     C -->|Stores/Retrieves Images| E[Server File System];
+    F[API Documentation] -->|Rendered by| C;
 ```

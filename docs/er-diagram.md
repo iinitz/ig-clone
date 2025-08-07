@@ -3,32 +3,33 @@ erDiagram
     users {
         INT id PK
         VARCHAR username
-        VARCHAR password_hash
+        VARCHAR password
         VARCHAR email
-        TIMESTAMP created_at
+        TIMESTAMP createdAt
     }
 
     posts {
         INT id PK
-        INT user_id FK
-        VARCHAR image_url
+        INT authorId FK
+        VARCHAR imageUrl
         TEXT caption
-        TIMESTAMP created_at
+        TIMESTAMP createdAt
     }
 
     comments {
         INT id PK
-        INT post_id FK
-        INT user_id FK
+        INT postId FK
+        INT authorId FK
         TEXT content
-        TIMESTAMP created_at
+        TIMESTAMP createdAt
+        INT parentId FK
     }
 
     likes {
         INT id PK
-        INT post_id FK
-        INT user_id FK
-        TIMESTAMP created_at
+        INT postId FK
+        INT userId FK
+        TIMESTAMP createdAt
     }
 
     users ||--o{ posts : "has"
@@ -36,4 +37,5 @@ erDiagram
     posts ||--o{ likes : "has"
     users ||--o{ comments : "has"
     users ||--o{ likes : "has"
+    comments }|..o{ comments : "replies to"
 ```
